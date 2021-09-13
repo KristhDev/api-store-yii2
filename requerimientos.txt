@@ -35,7 +35,8 @@ Pedidos
 2) Cada usuario podra ver todos sus pedidos(pendientes y confirmados) y el detalle de cada uno. ✔
 3) Solo el usuario dueño del pedido puede actualizarlo, eliminarlo(desactivarlo), eliminarlos todos(desactivarlos),
 confirmar uno o confirmarlos todos. ✔
-4) No se podra hacer un pedido ni actualizarlo si el stock del producto es 0. ✖
+4) No se podra hacer un pedido ni actualizarlo si el stock del producto es 0, igual si la cantidad pedida supera
+a la cantidad disponible. ✔
 5) Al confirmar el pedido no se podra actualizar ni eliminar(desactivar). ✔
 6) Al confirmar un pedido y si el stock del producto esta en 0, se le informará al usuario que el producto
 ya no esta disponible. ✔
