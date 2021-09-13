@@ -8,6 +8,11 @@ class ProductResource extends Product
 {
     public function fields()
     {
-        return ['id', 'category_id', 'name', 'description', 'price', 'stock', 'image'];
+        return ['id', 'category_id', 'name', 'description', 'price', 'stock', 'image', 'reviews'];
+    }
+
+    public function getReviews()
+    {
+        return $this->hasMany(ReviewResource::class, ['product_id' => 'id'])->where(['status' => '1']) ?: [];
     }
 }
