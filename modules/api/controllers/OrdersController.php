@@ -31,6 +31,7 @@ class OrdersController extends ApiController
                 'delete-all' => ['delete'],
             ]
         ];
+        
         return $behaviors;
     }
 

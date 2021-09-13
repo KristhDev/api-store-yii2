@@ -9,6 +9,19 @@ class CategoriesController extends ApiController
 {
     public $modelClass = CategoryResource::class;
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => \yii\filters\VerbFilter::class,
+            'actions' => [
+                'products' => ['get'],
+            ]
+        ];
+
+        return $behaviors;
+    }
+
     public function actions()
     {
         $actions = parent::actions();
@@ -72,8 +85,6 @@ class CategoriesController extends ApiController
     }
 
     public function actionProducts($id) {
-        if (!$this->request->isGet) return $this->methodNotAllowed('GET');
-
         $products = $this->findModels(ProductResource::class, ['category_id' => $id, 'status' => 1], 'id desc');
 
         return ($products !== []) 
