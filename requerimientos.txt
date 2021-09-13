@@ -1,0 +1,41 @@
+Api-store
+
+Usuarios
+
+1) Los usuarios van a poder registrarse y tener cuenta. ✔
+2) Hay dos tipos de usuarios: user y admin. ✔
+3) Cada uno de ellos puede actualizar su información. ✔
+4) Cada uno de ellos puede eliminar(desactivar) su propia cuenta y el administrador 
+puede eliminar los usuarios que desee. ✔
+
+Categorias
+
+1) Las Categorias pueden ser creadas, actualizadas y eliminadas por el administrador. ✔
+2) Todos lo usuarios, incluso los no registrados pueden ver las categorias, a excepción de las desactivadas. ✔
+3) Al eliminar una categoria todos los productos de ella seran desactivados. ✖
+
+Productos
+
+1) Los Productos pueden ser creados, actualizados y eliminados(descativados) por el administrador. ✔
+2) Todos lo usuarios, incluso los no registrados pueden ver las productos, a excepción de los desactivados. ✔
+3) Los productos se mostraran de más nuevo a más viejo. ✔
+5) Habra una sección para mostrar los productos mejor calificados. ✖
+6) Se podra ver un producto aunque el stock este en 0, a excepción si está desactivado. ✔
+
+Reseñas
+
+1) Todos los productos tendran reseñas redactadas por los usuarios registrados, sobre qué les parecio el producto. ✖
+2) Estas reseñas se mostraran en el detalle del producto. ✖
+3) Cada usuario puede actualizar y eliminar su propia reseña. ✖
+4) Solo el administrador puede eliminar una reseña por contenido ofensivo. ✖
+
+Pedidos
+
+1) Cada usuario con una cuenta puede hacer pedidos de los productos. ✔
+2) Cada usuario podra ver todos sus pedidos(pendientes y confirmados) y el detalle de cada uno. ✔
+3) Solo el usuario dueño del pedido puede actualizarlo, eliminarlo(desactivarlo), eliminarlos todos(desactivarlos),
+confirmar uno o confirmarlos todos. ✔
+4) No se podra hacer un pedido ni actualizarlo si el stock del producto es 0. ✖
+5) Al confirmar el pedido no se podra actualizar ni eliminar(desactivar). ✔
+6) Al confirmar un pedido y si el stock del producto esta en 0, se le informará al usuario que el producto
+ya no esta disponible. ✔

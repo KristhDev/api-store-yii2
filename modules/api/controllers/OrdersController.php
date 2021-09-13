@@ -19,11 +19,18 @@ class OrdersController extends ApiController
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['only'] = ['index', 'view', 'create', 'update', 'delete', 'deleteAll', 'confirm', 'confirmAll'];
+        $behaviors['authenticator']['only'] = ['index', 'view', 'create', 'update', 'delete', 'delete-all', 'confirm', 'confirm-all'];
         $behaviors['authenticator']['authMethods'] = [
             HttpBearerAuth::class
         ];
-
+        $behaviors['verbs'] = [
+            'class' => \yii\filters\VerbFilter::class,
+            'actions' => [
+                'confirm' => ['put'],
+                'confirm-all' => ['put'],
+                'delete-all' => ['delete'],
+            ]
+        ];
         return $behaviors;
     }
 
@@ -108,8 +115,6 @@ class OrdersController extends ApiController
 
     public function actionDeleteAll()
     {
-        if (!$this->request->isDelete) return $this->methodNotAllowed('DELETE');
-
         $models = $this->modelClass::findAll(['user_id' => Yii::$app->user->id, 'status' => 'Pendiente']);
 
         if ($models === []) {
@@ -130,10 +135,23 @@ class OrdersController extends ApiController
 
     public function actionConfirm($id)
     {
-        if (!$this->request->isPut) return $this->methodNotAllowed('PUT');
-
         $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 'Pendiente']);
         $this->checkAccess('confirm', $model);
+
+        $product = $model->getProduct()->one();
+
+        if ($product === null) {
+            return $this->errorResponse(
+                ['message' => 'Sorry, but this product is no longer available'],
+                400
+            );
+        }
+        else if ($product->stock === 0 ) {
+            return $this->errorResponse(
+                ['message' => 'We are sorry, but we no longer have this product. You can wait and we will notify you when there is more of this product or you can cancel your order'],
+                400
+            );
+        }
 
         $model->status = 'Confirmado';
         $model->date_confirm = date('Y-m-d H:i:s');
@@ -194,6 +212,12 @@ class OrdersController extends ApiController
             else if ($product->stock === 0) {
                 return $this->errorResponse(
                     ['message' => 'Sorry this product is out of stock, we will have more of this product soon'], 
+                    404
+                );
+            }
+            else if ($model->quantity > $product->stock) {
+                return $this->errorResponse(
+                    ['message' => 'Sorry, but we dont have that much product available'], 
                     404
                 );
             }
