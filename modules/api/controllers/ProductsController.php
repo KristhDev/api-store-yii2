@@ -50,9 +50,9 @@ class ProductsController extends ApiController
         return $this->saveOrUpdateModel(
             $model, 
             'Product created successfully', 
+            201,
             'uploads/products', 
-            'image',
-            201
+            'image'
         );
     }
 
@@ -64,9 +64,9 @@ class ProductsController extends ApiController
         return $this->saveOrUpdateModel(
             $model, 
             'Product updated successfully', 
+            200,
             'uploads/products', 
-            'image',
-            200
+            'image'
         );
     }
 

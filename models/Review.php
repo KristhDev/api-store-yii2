@@ -56,7 +56,7 @@ class Review extends \yii\db\ActiveRecord
         }
         else {
             $rules = array_merge($rules, [
-                [['user_id', 'product_id', 'comment', 'starts', 'created_at', 'updated_at'], 'required']
+                [['user_id', 'product_id', 'comment', 'starts'], 'required']
             ]);
         }
 

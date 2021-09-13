@@ -87,9 +87,9 @@ class UsersController extends ApiController
         return $this->saveOrUpdateModel(
             $model, 
             'You have successfully updated your profile', 
+            200,
             'uploads/users', 
-            'image',
-            200
+            'image'
         );
     }
 

@@ -2,6 +2,9 @@
 
 namespace app\modules\api\controllers;
 
+use Yii;
+use yii\web\ForbiddenHttpException;
+
 use app\modules\api\controllers\ApiController;
 use app\modules\api\resources\ReviewResource;
 
@@ -19,6 +22,17 @@ class ReviewsController extends ApiController
         unset($actions['delete']);
     }
 
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        if (in_array($action, ['delete']) && 
+            (Yii::$app->user->identity->type === 'admin' || Yii::$app->user->id === $model->user_id)
+        ) {
+            return;
+        }
+
+        throw new ForbiddenHttpException('You do not have permission to change this record');
+    }
+
     public function actionIndex($id)
     {
         $reviews = $this->findModels($this->modelClass, ['product_id' => $id, 'status' => '1']);
@@ -26,5 +40,18 @@ class ReviewsController extends ApiController
         return ($reviews !== []) 
             ? ['reviews' => $reviews, 'status' => 200]
             : ['message' => 'This product has no reviews', 'status' => 404];
+    }
+
+    public function actionCreate($id)
+    {
+        $model = new ReviewResource();
+        $model->product_id = $id;
+        $model->user_id = Yii::$app->user->id;
+
+        return $this->saveOrUpdateModel(
+            $model,
+            'You have made your review satisfactorily',
+            201
+        );
     }
 }

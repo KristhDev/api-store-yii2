@@ -51,12 +51,7 @@ class CategoriesController extends ApiController
         $this->checkAccess('create');
         $model = new CategoryResource();
 
-        return $this->saveOrUpdateModel(
-            $model, 
-            'Category created successfully',
-            null, '',
-            201
-        );
+        return $this->saveOrUpdateModel($model, 'Category created successfully', 201);
     }
 
     public function actionUpdate($id)
@@ -64,12 +59,7 @@ class CategoriesController extends ApiController
         $this->checkAccess('update');
         $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
         
-        return $this->saveOrUpdateModel(
-            $model, 
-            'Category updated successfully',
-            null, '',
-            200
-        );
+        return $this->saveOrUpdateModel($model, 'Category updated successfully', 200);
     }
 
     public function actionDelete($id)

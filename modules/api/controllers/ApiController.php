@@ -98,7 +98,7 @@ class ApiController extends ActiveController {
         return $results;
     }
 
-    public function saveOrUpdateModel($model, $successMsg, $imageStoragePath = null, $fileName = '', $statusSuccess) {
+    public function saveOrUpdateModel($model, $successMsg, $statusSuccess, $imageStoragePath = null, $fileName = '') {
         //* Recomendable esta linea antes de subir cualquier archivo
         Yii::$app->request->getBodyParams();
         //* Para subir imagenes a rest usar getInstanceByName
