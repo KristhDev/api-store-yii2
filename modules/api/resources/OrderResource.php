@@ -14,4 +14,9 @@ class OrderResource extends Order
 
         return $fields;
     }
+
+    public function getProduct()
+    {
+        return $this->hasOne(ProductResource::class, ['id' => 'product_id'])->where(['status' => 1]);
+    }
 }

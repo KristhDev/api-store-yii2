@@ -116,7 +116,7 @@ class OrdersController extends ApiController
         $model->status = 'Confirmado';
         $model->date_confirm = date('Y-m-d H:i:s');
 
-        $product = ProductResource::find()->where(['id' => $model->product_id, 'status' => 1])->one();
+        $product = $this->findModel(ProductResource::class, ['id' => $model->product_id, 'status' => 1]);
         $product->stock -= $model->quantity;
 
         if ($model->validate() && $model->save() && $product->save()) {
@@ -124,6 +124,37 @@ class OrdersController extends ApiController
         }
 
         return $this->errorResponse($model->errors, 500);
+    } 
+    
+    public function actionConfirmAll() 
+    {
+        if (!$this->request->isPut) return $this->methodNotAllowed('PUT');
+
+        $models = $this->modelClass::findAll(['user_id' => Yii::$app->user->id, 'status' => 'Pendiente']);
+
+        if ($models === []) {
+            return $this->successResponse('You have no orders to confirm', 200);
+        }
+
+        foreach ($models as $model) {
+            $model->status = 'Confirmado';
+            $model->date_confirm = date('Y-m-d H:i:s');
+
+            $product = ProductResource::findOne(['id' => $model->product_id, 'status' => 1]);
+            $product->stock -= $model->quantity;
+
+            if (!$product->save()) {
+                return $this->errorResponse($product->errors, 500);
+            }
+            else if (!$model->save()) {
+                return $this->errorResponse($model->errors, 500);
+            }
+        }
+
+        return $this->successResponse(
+            'You have confirmed all your orders successfully, we will notify you when they are close to arrival', 
+            200
+        );
     }
 
     protected function saveOrUpdateOrder(OrderResource $model, $successMessage, $statusSuccess) 
@@ -132,8 +163,20 @@ class OrdersController extends ApiController
             $product = $model->getProduct()->one();
             $model->user_id = Yii::$app->user->id;
             
-            if ($product !== null)
-                $model->total_to_pay = $model->quantity * $product->price;
+            if ($product === null) {
+                return $this->errorResponse(
+                    ['message' => 'Sorry, this product is not available'], 
+                    404
+                );
+            }
+            else if ($product->stock === 0) {
+                return $this->errorResponse(
+                    ['message' => 'Sorry this product is out of stock, we will have more of this product soon'], 
+                    404
+                );
+            }
+            
+            $model->total_to_pay = $model->quantity * $product->price;
         }
 
         if ($model->validate() && $model->save()) {
