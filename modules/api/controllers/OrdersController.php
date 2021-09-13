@@ -19,7 +19,7 @@ class OrdersController extends ApiController
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['only'] = ['index', 'view', 'create', 'update', 'delete'];
+        $behaviors['authenticator']['only'] = ['index', 'view', 'create', 'update', 'delete', 'deleteAll', 'confirm', 'confirmAll'];
         $behaviors['authenticator']['authMethods'] = [
             HttpBearerAuth::class
         ];
@@ -104,6 +104,28 @@ class OrdersController extends ApiController
             'You have successfully canceled your order', 
             ['status' => 'Cancelado']
         );
+    }
+
+    public function actionDeleteAll()
+    {
+        if (!$this->request->isDelete) return $this->methodNotAllowed('DELETE');
+
+        $models = $this->modelClass::findAll(['user_id' => Yii::$app->user->id, 'status' => 'Pendiente']);
+
+        if ($models === []) {
+            return $this->successResponse('You have no orders to cancel', 200);
+        }
+
+        foreach ($models as $model) {
+            $model->status = 'Cancelado';
+
+            if (!$model->save()) return $this->errorResponse(
+                ['message' => 'Could not cancel one of your orders, please contact the administrator'], 
+                500
+            );
+        }
+
+        return $this->successResponse('You have successfully canceled all your orders', 200);
     }
 
     public function actionConfirm($id)
