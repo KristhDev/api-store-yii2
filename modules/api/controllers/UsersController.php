@@ -56,7 +56,7 @@ class UsersController extends ApiController
             return $this->successResponse('You have successfully registered', 200);
         }
 
-        return $this->hasError($model, 400); 
+        return $this->errorResponse($model->errors, 400); 
     }
 
     public function actionLogin()
@@ -71,7 +71,7 @@ class UsersController extends ApiController
             ];
         }
 
-        return $this->hasError($model, 400);
+        return $this->errorResponse($model->errors, 400);
     }
 
     public function actionView($id)

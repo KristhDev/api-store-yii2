@@ -72,6 +72,8 @@ class CategoriesController extends ApiController
     }
 
     public function actionProducts($id) {
+        if (!$this->request->isGet) return $this->methodNotAllowed('GET');
+
         $products = $this->findModels(ProductResource::class, ['category_id' => $id, 'status' => 1], 'id desc');
 
         return ($products !== []) 

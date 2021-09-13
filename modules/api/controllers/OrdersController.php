@@ -123,7 +123,7 @@ class OrdersController extends ApiController
             return $this->successResponse('You have successfully confirmed your order, we will notify you when it is close to arriving', 200);
         }
 
-        return $this->hasError($model, 500);
+        return $this->errorResponse($model->errors, 500);
     }
 
     protected function saveOrUpdateOrder(OrderResource $model, $successMessage, $statusSuccess) 
@@ -140,6 +140,6 @@ class OrdersController extends ApiController
             return $this->successResponse($successMessage, $statusSuccess);
         }
 
-        return $this->hasError($model, 400);
+        return $this->errorResponse($model->errors, 400);
     }
 }

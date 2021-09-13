@@ -30,16 +30,6 @@ class ApiController extends ActiveController {
         }
     }
 
-    public function hasError($model, $status)
-    {
-        $this->response->statusCode = $status;
-
-        return [
-            'errors' => $model->errors,
-            'status' => $status
-        ];
-    }
-
     public function methodNotAllowed($method)
     {
         return [
@@ -54,6 +44,16 @@ class ApiController extends ActiveController {
     public function successResponse($message, $status){
         return [
             'message' => $message,
+            'status' => $status
+        ];
+    }
+
+    public function errorResponse($errors, $status)
+    {
+        $this->response->statusCode = $status;
+
+        return [
+            'errors' => $errors,
             'status' => $status
         ];
     }
@@ -117,7 +117,7 @@ class ApiController extends ActiveController {
             if ($model->save()) return $this->successResponse($successMsg, $statusSuccess);
         }
 
-        return $this->hasError($model, 400);
+        return $this->errorResponse($model->errors, 400);
     }
 
     public function deleteModel($model, $successMsg, $updatedFields)
@@ -128,7 +128,7 @@ class ApiController extends ActiveController {
             if ($model->save()) return $this->successResponse($successMsg, 200);
         }
         
-        return $this->hasError($model, 500);
+        return $this->errorResponse($model->errors, 500);
     }
 
     public function uploadImage($model, $basicPath)
