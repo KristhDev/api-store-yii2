@@ -3,7 +3,9 @@
 namespace app\modules\api\controllers;
 
 use app\modules\api\resources\ProductResource;
+use app\modules\api\resources\ReviewResource;
 use app\modules\api\controllers\ApiController;
+use yii\data\Pagination;
 
 class ProductsController extends ApiController
 {
@@ -80,5 +82,27 @@ class ProductsController extends ApiController
             'Product removed successfully', 
             ['status' => 0, 'image' => 'image deleted']
         );
+    }
+
+    public function actionBest()
+    {
+        $products = [];
+
+        $pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => ProductResource::find()->count()
+        ]);
+
+        $reviews = ReviewResource::find()->select(['SUM(IFNULL(starts, 0)) as starts', 'product_id'])
+            ->where(['status' => 1])->groupBy(['product_id'])->orderBy(['starts'=>SORT_DESC])
+            ->offset($pagination->offset)->limit($pagination->limit)->all() ?: [];
+
+        foreach($reviews as $review) {
+            if(($producto = ProductResource::findOne(['id' => $review->product_id, 'status' => 1]))) {
+                $products[] = ['product' => $producto, 'totalPoints' => $review->starts];
+            }
+        }
+
+        return $products;
     }
 }

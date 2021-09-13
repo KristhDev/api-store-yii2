@@ -8,7 +8,12 @@ class ProductResource extends Product
 {
     public function fields()
     {
-        return ['id', 'category_id', 'name', 'description', 'price', 'stock', 'image', 'reviews'];
+        return ['id', 'category_id', 'name', 'description', 'price', 'stock', 'image'];
+    }
+
+    public function extraFields()
+    {
+        return ['reviews'];
     }
 
     public function getReviews()
