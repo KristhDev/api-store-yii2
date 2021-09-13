@@ -21,16 +21,16 @@ class CategoriesController extends ApiController
 
     public function actionIndex()
     {
-        $categories = $this->findModels(CategoryResource::class, ['status' => 1], 'id desc', false);
+        $categories = $this->findModels($this->modelClass, ['status' => 1], 'id desc', false);
 
         return ($categories !== []) 
-            ? ['categories' => $categories, 'status' => 'ok']
-            : ['message' => 'No results found', 'status' => 'ops'];
+            ? ['categories' => $categories, 'status' => 200]
+            : ['message' => 'No results found', 'status' => 404];
     }
 
     public function actionView($id) 
     {
-        return $this->findModel(CategoryResource::class, ['id' => $id]);
+        return $this->findModel($this->modelClass, ['id' => $id]);
     }
 
     public function actionCreate()
@@ -40,25 +40,29 @@ class CategoriesController extends ApiController
 
         return $this->saveOrUpdateModel(
             $model, 
-            'Category created successfully'
+            'Category created successfully',
+            null, '',
+            201
         );
     }
 
     public function actionUpdate($id)
     {
         $this->checkAccess('update');
-        $model = $this->findModel(CategoryResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
         
         return $this->saveOrUpdateModel(
             $model, 
-            'Category updated successfully'
+            'Category updated successfully',
+            null, '',
+            200
         );
     }
 
     public function actionDelete($id)
     {
         $this->checkAccess('delete');
-        $model = $this->findModel(CategoryResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
         
         return $this->deleteModel(
             $model, 
@@ -71,7 +75,7 @@ class CategoriesController extends ApiController
         $products = $this->findModels(ProductResource::class, ['category_id' => $id, 'status' => 1], 'id desc');
 
         return ($products !== []) 
-            ? ['products' => $products, 'status' => 'ok' ] 
-            : ['status' => 'ops', 'message' => 'There are no products for this category.'];
+            ? ['products' => $products, 'status' => 200] 
+            : ['message' => 'There are no products for this category.', 'status' => 404];
     }
 }

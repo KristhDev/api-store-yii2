@@ -53,10 +53,10 @@ class UsersController extends ApiController
         $model = new SignUp();
 
         if ($model->load($this->request->post(), '') && $model->register()) {
-            return $this->successResponse('You have successfully registered');
+            return $this->successResponse('You have successfully registered', 200);
         }
 
-        return $this->hasError($model); 
+        return $this->hasError($model, 400); 
     }
 
     public function actionLogin()
@@ -71,30 +71,31 @@ class UsersController extends ApiController
             ];
         }
 
-        return $this->hasError($model);
+        return $this->hasError($model, 400);
     }
 
     public function actionView($id)
     {
-        return $this->findModel(UserResource::class, ['id' => $id, 'status' => 1]);
+        return $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
     }
 
     public function actionUpdate($id)
     {
-        $model = $this->findModel(UserResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
         $this->checkAccess('update', $model);
 
         return $this->saveOrUpdateModel(
             $model, 
             'You have successfully updated your profile', 
             'uploads/users', 
-            'file'
+            'image',
+            200
         );
     }
 
     public function actionDelete($id)
     {
-        $model = $this->findModel(UserResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
         $this->checkAccess('delete', $model);
 
         return $this->deleteModel(

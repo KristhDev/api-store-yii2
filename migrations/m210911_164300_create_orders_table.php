@@ -19,9 +19,9 @@ class m210911_164300_create_orders_table extends Migration
             'direction' => $this->text()->notNull(),
             'quantity' => $this->integer(255)->notNull(),
             'total_to_pay' => $this->integer(255)->notNull(),
-            'status' => "ENUM('Pendiente', 'Cancelado', 'Confirmado')",
-            'date' => $this->dateTime()->notNull(),
-            'date_confirm' => $this->dateTime()->notNull()
+            'status' => "ENUM('Pendiente', 'Cancelado', 'Confirmado') DEFAULT 'Pendiente'",
+            'date' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP()'),
+            'date_confirm' => $this->dateTime()
         ]);
 
         $this->addForeignKey('fk_orders_user', '{{%orders}}', 'user_id', '{{%users}}', 'id');

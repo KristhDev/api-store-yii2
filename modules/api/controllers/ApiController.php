@@ -30,20 +30,31 @@ class ApiController extends ActiveController {
         }
     }
 
-    public function hasError($model)
+    public function hasError($model, $status)
     {
-        $this->response->statusCode = 400;
+        $this->response->statusCode = $status;
 
         return [
             'errors' => $model->errors,
-            'status' => 'error'
+            'status' => $status
         ];
     }
 
-    public function successResponse($message){
+    public function methodNotAllowed($method)
+    {
+        return [
+            'name' => 'Method Not Allowed',
+            'message' => 'Method Not Allowed. This URL can only handle the following request methods: ' . $method,
+            'code' => 0,
+            'status' => 405,
+            'type' => 'yii\\web\\MethodNotAllowedHttpException'
+        ];
+    }
+
+    public function successResponse($message, $status){
         return [
             'message' => $message,
-            'status' => 'ok'
+            'status' => $status
         ];
     }
 
@@ -77,7 +88,7 @@ class ApiController extends ActiveController {
                 }  
             }
 
-            $results =  $results->andWhere($condition)->offset($pagination->offset)
+            $results = $results->andWhere($condition)->offset($pagination->offset)
                 ->limit($pagination->limit)->orderBy($order)->all();
         }
         else {
@@ -87,26 +98,26 @@ class ApiController extends ActiveController {
         return $results;
     }
 
-    public function saveOrUpdateModel($model, $successMsg, $imageStoragePath = null, $fileName = '') {
-        if ($model->load($this->request->post(), '')) {
-            //* Recomendable esta linea antes de subir cualquier archivo
-            Yii::$app->request->getBodyParams();
-            //* Para subir imagenes a rest usar getInstanceByName
-            $file = UploadedFile::getInstanceByName($fileName);
+    public function saveOrUpdateModel($model, $successMsg, $imageStoragePath = null, $fileName = '', $statusSuccess) {
+        //* Recomendable esta linea antes de subir cualquier archivo
+        Yii::$app->request->getBodyParams();
+        //* Para subir imagenes a rest usar getInstanceByName
+        $file = UploadedFile::getInstanceByName($fileName);
 
-            if ($imageStoragePath !== null) { 
-                if ($file) {
-                    $model->file = $file;
-                    $this->uploadImage($model, $imageStoragePath);
-                }
+        $model->load($this->request->post(), '');
+
+        if ($imageStoragePath !== null) { 
+            if ($file) {
+                $model->file = $file;
+                $this->uploadImage($model, $imageStoragePath);
             }
+        }
 
-            if ($model->validate()) {
-                if ($model->save()) return $this->successResponse($successMsg);
-            }
-        };
+        if ($model->validate()) {
+            if ($model->save()) return $this->successResponse($successMsg, $statusSuccess);
+        }
 
-        return $this->hasError($model);
+        return $this->hasError($model, 400);
     }
 
     public function deleteModel($model, $successMsg, $updatedFields)
@@ -114,10 +125,10 @@ class ApiController extends ActiveController {
         if (isset($model->image)) $this->deleteImage($model->image);
 
         if ($model->load($updatedFields, '')){
-            if ($model->save()) return $this->successResponse($successMsg);
+            if ($model->save()) return $this->successResponse($successMsg, 200);
         }
         
-        return $this->hasError($model);
+        return $this->hasError($model, 500);
     }
 
     public function uploadImage($model, $basicPath)

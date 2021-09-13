@@ -25,7 +25,7 @@ class ProductsController extends ApiController
     {
         $search = $this->request->get('search');
         $products = $this->findModels(
-            ProductResource::class, 
+            $this->modelClass, 
             ['status' => 1], 
             'id desc', true, 
             $search, 
@@ -33,13 +33,13 @@ class ProductsController extends ApiController
         );
         
         return ($products !== [])
-            ? ['products' => $products, 'status' => 'ok']
-            : ['message' => 'No results found', 'status' => 'ops'];
+            ? ['products' => $products, 'status' => 200]
+            : ['message' => 'No results found', 'status' => 404];
     }
 
     public function actionView($id) 
     {
-        return $this->findModel(ProductResource::class, ['id' => $id]);
+        return $this->findModel($this->modelClass, ['id' => $id]);
     }
 
     public function actionCreate()
@@ -51,27 +51,29 @@ class ProductsController extends ApiController
             $model, 
             'Product created successfully', 
             'uploads/products', 
-            'image'
+            'image',
+            201
         );
     }
 
     public function actionUpdate($id)
     {
         $this->checkAccess('update');
-        $model = $this->findModel(ProductResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
 
         return $this->saveOrUpdateModel(
             $model, 
             'Product updated successfully', 
             'uploads/products', 
-            'image'
+            'image',
+            200
         );
     }
 
     public function actionDelete($id)
     {
         $this->checkAccess('delete');
-        $model = $this->findModel(ProductResource::class, ['id' => $id, 'status' => 1]);
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
 
         return $this->deleteModel(
             $model, 
