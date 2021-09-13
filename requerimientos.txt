@@ -24,9 +24,9 @@ Productos
 
 Reseñas
 
-1) Todos los productos tendran reseñas redactadas por los usuarios registrados, sobre qué les parecio el producto. ✖
+1) Todos los productos tendran reseñas redactadas por los usuarios registrados, sobre qué les parecio el producto. ✔
 2) Estas reseñas se mostraran en el detalle del producto. ✖
-3) Cada usuario puede actualizar y eliminar su propia reseña. ✖
+3) Cada usuario puede actualizar y eliminar su propia reseña. ✔
 4) Solo el administrador puede eliminar una reseña por contenido ofensivo. ✖
 
 Pedidos
