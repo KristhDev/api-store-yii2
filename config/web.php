@@ -58,7 +58,8 @@ $config = [
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
                 'api/categories/<id:\d+>/products' => 'api/categories/products',
                 'api/products/<id:\d+>/reviews' => 'api/reviews/index',
-                'api/products/<id:\d+>/reviews/create' => 'api/reviews/create'
+                'api/products/<id:\d+>/reviews/create' => 'api/reviews/create',
+                'api/products/reviews/<action:\w+>/<id:\d+>' => 'api/reviews/<action>'
             ],
 
             /* 'enablePrettyUrl' => true,

@@ -54,4 +54,26 @@ class ReviewsController extends ApiController
             201
         );
     }
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => '1']);
+
+        return $this->saveOrUpdateModel(
+            $model,
+            'You have successfully updated your review',
+            200
+        );
+    }
+
+    public function actionDelete($id)
+    {
+        $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => '1']);
+
+        return $this->deleteModel(
+            $model, 
+            'You have successfully removed this review', 
+            ['status' => '0']
+        );
+    }
 }
