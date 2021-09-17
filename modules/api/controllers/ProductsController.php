@@ -2,10 +2,11 @@
 
 namespace app\modules\api\controllers;
 
+use yii\data\Pagination;
+
 use app\modules\api\resources\ProductResource;
 use app\modules\api\resources\ReviewResource;
 use app\modules\api\controllers\ApiController;
-use yii\data\Pagination;
 
 class ProductsController extends ApiController
 {
