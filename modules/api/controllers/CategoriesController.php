@@ -66,6 +66,16 @@ class CategoriesController extends ApiController
     {
         $this->checkAccess('delete');
         $model = $this->findModel($this->modelClass, ['id' => $id, 'status' => 1]);
+
+        $products = ProductResource::findAll(['category_id' => $id, 'status' => 1]);
+
+        foreach ($products as $product) {
+            $this->deleteModel(
+                $product, 
+                'Product removed successfully', 
+                ['status' => 0, 'image' => 'image deleted']
+            );
+        }
         
         return $this->deleteModel(
             $model, 

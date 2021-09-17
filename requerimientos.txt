@@ -12,7 +12,7 @@ Categorias
 
 1) Las Categorias pueden ser creadas, actualizadas y eliminadas por el administrador. ✔
 2) Todos lo usuarios, incluso los no registrados pueden ver las categorias, a excepción de las desactivadas. ✔
-3) Al eliminar una categoria todos los productos de ella seran desactivados. ✖
+3) Al eliminar una categoria todos los productos de ella seran desactivados. ✔
 
 Productos
 
