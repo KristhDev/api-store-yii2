@@ -19,7 +19,9 @@ class OrdersController extends ApiController
     {
         $behaviors = parent::behaviors();
 
-        $behaviors['authenticator']['only'] = ['index', 'view', 'create', 'update', 'delete', 'delete-all', 'confirm', 'confirm-all'];
+        $behaviors['authenticator']['only'] = [
+            'index', 'view', 'create', 'update', 'delete', 'delete-all', 'confirm', 'confirm-all', 'pdf'
+        ];
         $behaviors['authenticator']['authMethods'] = [
             HttpBearerAuth::class
         ];
@@ -29,6 +31,7 @@ class OrdersController extends ApiController
                 'confirm' => ['put'],
                 'confirm-all' => ['put'],
                 'delete-all' => ['delete'],
+                'pdf' => ['get']
             ]
         ];
         
@@ -196,6 +199,26 @@ class OrdersController extends ApiController
             'You have confirmed all your orders successfully, we will notify you when they are close to arrival', 
             200
         );
+    }
+
+    public function actionPdf()
+    {
+        $orders = $this->modelClass::findAll(['user_id' => Yii::$app->user->id, 'status' => 'Confirmado']);
+        $query = (new \yii\db\Query())->select(["SUM(total_to_pay) AS 'total_payed'"])->from('orders')
+            ->where(['user_id' => Yii::$app->user->id, 'status' => 'Confirmado']);
+
+        $command = $query->createCommand();
+        $totalPayed = $command->queryOne();
+        
+        $html = $this->renderPartial('pdf', ['orders' => $orders, 'totalPayed' => $totalPayed]);
+
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->showImageErrors = true;
+        $mpdf->SetDisplayMode('fullpage', 'two');
+        $mpdf->list_indent_first_level = 0;
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        exit;
     }
 
     protected function saveOrUpdateOrder(OrderResource $model, $successMessage, $statusSuccess) 
