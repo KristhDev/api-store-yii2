@@ -152,4 +152,15 @@ class ApiController extends ActiveController {
     {
         if (file_exists($image)) unlink($image);
     }
+
+    public function generatePdf($html) 
+    {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->showImageErrors = true;
+        $mpdf->SetDisplayMode('fullpage', 'two');
+        $mpdf->list_indent_first_level = 0;
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        exit;
+    }
 }

@@ -204,21 +204,13 @@ class OrdersController extends ApiController
     public function actionPdf()
     {
         $orders = $this->modelClass::findAll(['user_id' => Yii::$app->user->id, 'status' => 'Confirmado']);
-        $query = (new \yii\db\Query())->select(["SUM(total_to_pay) AS 'total_payed'"])->from('orders')
-            ->where(['user_id' => Yii::$app->user->id, 'status' => 'Confirmado']);
-
-        $command = $query->createCommand();
-        $totalPayed = $command->queryOne();
+        $totalPayed =  $this->modelClass::find()->select(['SUM(IFNULL(total_to_pay, 0)) AS total_to_pay', 
+            'SUM(IFNULL(quantity, 0)) AS quantity'])->where(['user_id' => Yii::$app->user->id, 'status' => 'Confirmado'])
+            ->one();
         
         $html = $this->renderPartial('pdf', ['orders' => $orders, 'totalPayed' => $totalPayed]);
 
-        $mpdf = new \Mpdf\Mpdf();
-        $mpdf->showImageErrors = true;
-        $mpdf->SetDisplayMode('fullpage', 'two');
-        $mpdf->list_indent_first_level = 0;
-        $mpdf->WriteHTML($html);
-        $mpdf->Output();
-        exit;
+        return $this->generatePdf($html);
     }
 
     protected function saveOrUpdateOrder(OrderResource $model, $successMessage, $statusSuccess) 
