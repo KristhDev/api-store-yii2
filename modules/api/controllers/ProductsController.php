@@ -100,10 +100,10 @@ class ProductsController extends ApiController
 
         foreach($reviews as $review) {
             if(($producto = ProductResource::findOne(['id' => $review->product_id, 'status' => 1]))) {
-                $products[] = ['product' => $producto, 'totalPoints' => $review->starts];
+                $products[] = ['product' => $producto, 'totalPoints' => (int) $review->starts];
             }
         }
 
-        return $products;
+        return ['products' => $products, 'status' => 200];
     }
 }

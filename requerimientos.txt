@@ -20,6 +20,7 @@ Productos
 2) Todos lo usuarios, incluso los no registrados pueden ver las productos, a excepción de los desactivados. ✔
 3) Los productos se mostraran de más nuevo a más viejo. ✔
 5) Habra una sección para mostrar los productos mejor calificados. ✔
+6) Habra otra sección para mostrar los productos mejor calificados por categoria. ✔
 6) Se podra ver un producto aunque el stock este en 0, a excepción si está desactivado. ✔
 
 Reseñas
@@ -40,3 +41,4 @@ a la cantidad disponible. ✔
 5) Al confirmar el pedido no se podra actualizar ni eliminar(desactivar). ✔
 6) Al confirmar un pedido y si el stock del producto esta en 0, se le informará al usuario que el producto
 ya no esta disponible. ✔
+7) Cada usuario tendra la opción de descargar un pdf con los pedidos que haya confirmado. ✔

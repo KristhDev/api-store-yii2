@@ -4,6 +4,8 @@ namespace app\modules\api\controllers;
 
 use app\modules\api\resources\CategoryResource;
 use app\modules\api\resources\ProductResource;
+use app\modules\api\resources\ReviewResource;
+use yii\data\Pagination;
 
 class CategoriesController extends ApiController 
 {
@@ -84,11 +86,38 @@ class CategoriesController extends ApiController
         );
     }
 
-    public function actionProducts($id) {
+    public function actionProducts($id) 
+    {
         $products = $this->findModels(ProductResource::class, ['category_id' => $id, 'status' => 1], 'id desc');
 
         return ($products !== []) 
             ? ['products' => $products, 'status' => 200] 
             : ['message' => 'There are no products for this category.', 'status' => 404];
+    }
+
+    public function actionBest($id) {
+        $products = [];
+
+        $pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => ProductResource::find()->count()
+        ]);
+
+        $reviews = (new \yii\db\Query())
+            ->from(['p' => 'products'])
+            ->select(['p.id AS product_id', 'SUM(IFNULL(r.starts, 0)) AS starts'])
+            ->where(['p.category_id' => $id, 'p.status' => 1])
+            ->innerJoin(['r' => 'reviews'], 'p.id = r.product_id')
+            ->groupBy('p.id')->orderBy(['starts' => SORT_DESC])
+            ->offset($pagination->offset)->limit($pagination->limit)
+            ->all() ?: [];
+
+        foreach ($reviews as $review) {
+            if ($product = ProductResource::findOne(['id' => $review['product_id'], 'status' => 1])) {
+                $products[] = ['product' => $product, 'starts' => (int) $review['starts']];
+            }
+        }
+
+        return ['products' => $products, 'status' => 200];
     }
 }
