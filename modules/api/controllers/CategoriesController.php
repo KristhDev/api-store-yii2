@@ -3,6 +3,7 @@
 namespace app\modules\api\controllers;
 
 use app\modules\api\resources\CategoryResource;
+use app\modules\api\resources\OrderResource;
 use app\modules\api\resources\ProductResource;
 use yii\data\Pagination;
 
@@ -94,7 +95,8 @@ class CategoriesController extends ApiController
             : ['message' => 'There are no products for this category.', 'status' => 404];
     }
 
-    public function actionBest($id) {
+    public function actionBest($id) 
+    {
         $products = [];
 
         $pagination = new Pagination([
@@ -102,8 +104,7 @@ class CategoriesController extends ApiController
             'totalCount' => ProductResource::find()->count()
         ]);
 
-        $reviews = (new \yii\db\Query())
-            ->from(['p' => 'products'])
+        $reviews = (new \yii\db\Query())->from(['p' => 'products'])
             ->select(['p.id AS product_id', 'SUM(IFNULL(r.starts, 0)) AS starts'])
             ->where(['p.category_id' => $id, 'p.status' => 1])
             ->innerJoin(['r' => 'reviews'], 'p.id = r.product_id')
@@ -120,5 +121,33 @@ class CategoriesController extends ApiController
         return ($products !== []) 
             ? ['products' => $products, 'status' => 200]
             : ['message' => 'This category has no rated products', 'status' => 200];
+    }
+
+    public function actionBestSellers($id) 
+    {
+        $products = [];
+
+        $pagination = new Pagination([
+            'defaultPageSize' => 10,
+            'totalCount' => ProductResource::find()->count()
+        ]);
+
+        $orders = (new \yii\db\Query())->from(['p' => 'products'])
+        ->select(['p.id AS product_id', 'p.category_id', 'SUM(IFNULL(o.quantity, 0)) AS total_sold'])
+        ->where(['p.category_id' => $id, 'p.status' => 1])
+        ->innerJoin(['o' => 'orders'], 'o.product_id = p.id')
+        ->groupBy('p.id')->orderBy(['total_sold' => SORT_DESC])
+        ->offset($pagination->offset)->limit($pagination->limit)
+        ->all() ?: [];
+
+        foreach ($orders as $order) {
+            if ($product = ProductResource::findOne(['id' => $order['product_id'], 'status' => 1])) {
+                $products[] = ['product' => $product, 'total_sold' => (int) $order['total_sold']];
+            }
+        }
+
+        return ($products !== [])
+            ? ['products' => $products, 'status' => 200]
+            : ['message' => 'This category has no purchased products', 'status' => 200];
     }
 }
