@@ -24,6 +24,7 @@ Productos
 6) Habra otra sección para mostrar los productos mejor calificados por categoria. ✔
 7) Habra otra sección para mostrar los productos más vendidos por categoria. ✔
 8) Se podra ver un producto aunque el stock este en 0, a excepción si está desactivado. ✔
+9) Habra una sección para ver el inventario, solo los administradores pueden verlo. ✔
 
 Reseñas
 
