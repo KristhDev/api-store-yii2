@@ -4,7 +4,6 @@ namespace app\modules\api\controllers;
 
 use app\modules\api\resources\CategoryResource;
 use app\modules\api\resources\ProductResource;
-use app\modules\api\resources\ReviewResource;
 use yii\data\Pagination;
 
 class CategoriesController extends ApiController 
@@ -118,6 +117,8 @@ class CategoriesController extends ApiController
             }
         }
 
-        return ['products' => $products, 'status' => 200];
+        return ($products !== []) 
+            ? ['products' => $products, 'status' => 200]
+            : ['message' => 'This category has no rated products', 'status' => 200];
     }
 }

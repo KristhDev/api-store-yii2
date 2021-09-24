@@ -20,8 +20,10 @@ Productos
 2) Todos lo usuarios, incluso los no registrados pueden ver las productos, a excepción de los desactivados. ✔
 3) Los productos se mostraran de más nuevo a más viejo. ✔
 5) Habra una sección para mostrar los productos mejor calificados. ✔
+5) Habra una sección para mostrar los productos más vendidos. ✔
 6) Habra otra sección para mostrar los productos mejor calificados por categoria. ✔
-6) Se podra ver un producto aunque el stock este en 0, a excepción si está desactivado. ✔
+7) Habra otra sección para mostrar los productos más vendidos por categoria. ✖
+8) Se podra ver un producto aunque el stock este en 0, a excepción si está desactivado. ✔
 
 Reseñas
 
