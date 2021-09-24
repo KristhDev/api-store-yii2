@@ -134,7 +134,7 @@ class CategoriesController extends ApiController
 
         $orders = (new \yii\db\Query())->from(['p' => 'products'])
         ->select(['p.id AS product_id', 'p.category_id', 'SUM(IFNULL(o.quantity, 0)) AS total_sold'])
-        ->where(['p.category_id' => $id, 'p.status' => 1])
+        ->where(['p.category_id' => $id, 'p.status' => 1, 'o.status' => 'Confirmado'])
         ->innerJoin(['o' => 'orders'], 'o.product_id = p.id')
         ->groupBy('p.id')->orderBy(['total_sold' => SORT_DESC])
         ->offset($pagination->offset)->limit($pagination->limit)
