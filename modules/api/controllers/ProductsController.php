@@ -4,13 +4,14 @@ namespace app\modules\api\controllers;
 
 use yii\data\Pagination;
 
+use Yii;
+use yii\web\ForbiddenHttpException;
+
 use app\modules\api\resources\ProductResource;
 use app\modules\api\resources\ReviewResource;
 use app\modules\api\controllers\ApiController;
 use app\modules\api\resources\CategoryResource;
 use app\modules\api\resources\OrderResource;
-use Yii;
-use yii\web\ForbiddenHttpException;
 
 class ProductsController extends ApiController
 {
@@ -81,7 +82,7 @@ class ProductsController extends ApiController
             'Product created successfully', 
             201,
             'uploads/products', 
-            'image'
+            'file'
         );
     }
 
@@ -95,7 +96,7 @@ class ProductsController extends ApiController
             'Product updated successfully', 
             200,
             'uploads/products', 
-            'image'
+            'file'
         );
     }
 

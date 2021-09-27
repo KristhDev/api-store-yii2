@@ -30,17 +30,6 @@ class ApiController extends ActiveController {
         }
     }
 
-    public function methodNotAllowed($method)
-    {
-        return [
-            'name' => 'Method Not Allowed',
-            'message' => 'Method Not Allowed. This URL can only handle the following request methods: ' . $method,
-            'code' => 0,
-            'status' => 405,
-            'type' => 'yii\\web\\MethodNotAllowedHttpException'
-        ];
-    }
-
     public function successResponse($message, $status){
         return [
             'message' => $message,
