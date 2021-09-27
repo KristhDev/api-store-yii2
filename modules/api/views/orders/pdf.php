@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Precio Total</th>
         </tr>
 
-        <?php $index = 1; foreach ($orders as $order): $bgColor = ($index % 2 === 0) ? 'white' : '#E5E5E5;'; ?>
+        <?php $index = 1; foreach ($orders as $order): $bgColor = ($index % 2 === 0) ? 'white' : '#E5E5E5'; ?>
             <tr class="tbody" style="background-color: <?=$bgColor ?>;">
                 <td><?= $index ?></td>
                 <td><?= $order->product->name ?></td>
@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Yii::$app->formatter->asDecimal($order->total_to_pay, 2) ?>
                 </td>
             </tr>
-        <?php $index++; endforeach;  ?>
+        <?php $index++; endforeach; ?>
 
         <tr class="thead">
             <th style="text-align: right;" colspan="2">Total productos:</th>
